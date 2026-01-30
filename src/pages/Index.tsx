@@ -111,42 +111,65 @@ const Index = () => {
                 <p className="text-xl md:text-2xl mb-8 opacity-90">
                   Комфорт, надёжность и лучшие цены на авиабилеты
                 </p>
-                <Button size="lg" variant="secondary" className="text-lg px-8">
-                  <Icon name="Search" className="mr-2" size={20} />
-                  Найти рейс
-                </Button>
+                <div className="flex gap-4">
+                  <Button size="lg" variant="secondary" className="text-lg px-8" onClick={() => setActiveTab('flights')}>
+                    <Icon name="Plane" className="mr-2" size={20} />
+                    Доступные рейсы
+                  </Button>
+                  {!isAdmin && (
+                    <Button size="lg" className="text-lg px-8 bg-orange-500 hover:bg-orange-600" onClick={() => setShowAdminLogin(true)}>
+                      <Icon name="Lock" className="mr-2" size={20} />
+                      Админ-панель
+                    </Button>
+                  )}
+                  {isAdmin && (
+                    <Button size="lg" className="text-lg px-8 bg-orange-500 hover:bg-orange-600" onClick={() => setActiveTab('admin')}>
+                      <Icon name="Settings" className="mr-2" size={20} />
+                      Панель управления
+                    </Button>
+                  )}
+                </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-3xl font-bold mb-6 text-center">Популярные направления</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {flights.slice(0, 3).map((flight) => (
-                  <Card key={flight.id} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                    <div className="h-2 bg-gradient-to-r from-primary to-secondary" />
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span>{flight.to}</span>
-                        <Icon name="MapPin" className="text-primary" size={24} />
-                      </CardTitle>
-                      <CardDescription className="text-base">из {flight.from}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Icon name="Calendar" size={16} className="text-muted-foreground" />
-                        <span>{new Date(flight.date).toLocaleDateString('ru-RU')}</span>
-                        <Icon name="Clock" size={16} className="text-muted-foreground ml-2" />
-                        <span>{flight.time}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-3xl font-bold text-primary">${flight.price}</p>
-                          <p className="text-xs text-muted-foreground">{flight.duration}</p>
+              <h3 className="text-3xl font-bold mb-6 text-center">Доступные рейсы</h3>
+              <div className="grid gap-4">
+                {flights.map((flight) => (
+                  <Card key={flight.id} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-4 mb-2">
+                            <h3 className="text-2xl font-bold">{flight.from}</h3>
+                            <Icon name="ArrowRight" className="text-primary" size={24} />
+                            <h3 className="text-2xl font-bold">{flight.to}</h3>
+                            <Badge variant="secondary">{flight.duration}</Badge>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Icon name="Calendar" size={14} />
+                              {new Date(flight.date).toLocaleDateString('ru-RU')}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icon name="Clock" size={14} />
+                              {flight.time}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icon name="Users" size={14} />
+                              {flight.seats} мест
+                            </span>
+                          </div>
                         </div>
-                        <Button className="bg-secondary hover:bg-secondary/90">
-                          Купить
-                          <Icon name="ArrowRight" className="ml-2" size={18} />
-                        </Button>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-3xl font-bold text-primary">${flight.price}</p>
+                            <p className="text-xs text-muted-foreground">за человека</p>
+                          </div>
+                          <Button size="lg" className="bg-secondary hover:bg-secondary/90">
+                            Забронировать
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -185,15 +208,7 @@ const Index = () => {
 
         {activeTab === 'flights' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold">Доступные рейсы</h2>
-              <div className="flex gap-2">
-                <Input placeholder="Поиск..." className="w-64" />
-                <Button variant="outline">
-                  <Icon name="Filter" size={18} />
-                </Button>
-              </div>
-            </div>
+            <h2 className="text-3xl font-bold">Все доступные рейсы</h2>
             
             <div className="grid gap-4">
               {flights.map((flight) => (
