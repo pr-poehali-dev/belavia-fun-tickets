@@ -109,7 +109,7 @@ const Index = () => {
                   Летайте с Belavia
                 </h2>
                 <p className="text-xl md:text-2xl mb-8 opacity-90">
-                  Комфорт, надёжность и лучшие цены на авиабилеты
+                  сайт belavia roblox (не настоящий)! @belaviarb
                 </p>
                 <div className="flex gap-4">
                   <Button size="lg" variant="secondary" className="text-lg px-8" onClick={() => setActiveTab('flights')}>
@@ -132,50 +132,7 @@ const Index = () => {
               </div>
             </section>
 
-            <section>
-              <h3 className="text-3xl font-bold mb-6 text-center">Доступные рейсы</h3>
-              <div className="grid gap-4">
-                {flights.map((flight) => (
-                  <Card key={flight.id} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4 mb-2">
-                            <h3 className="text-2xl font-bold">{flight.from}</h3>
-                            <Icon name="ArrowRight" className="text-primary" size={24} />
-                            <h3 className="text-2xl font-bold">{flight.to}</h3>
-                            <Badge variant="secondary">{flight.duration}</Badge>
-                          </div>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Icon name="Calendar" size={14} />
-                              {new Date(flight.date).toLocaleDateString('ru-RU')}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Icon name="Clock" size={14} />
-                              {flight.time}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Icon name="Users" size={14} />
-                              {flight.seats} мест
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-3xl font-bold text-primary">${flight.price}</p>
-                            <p className="text-xs text-muted-foreground">за человека</p>
-                          </div>
-                          <Button size="lg" className="bg-secondary hover:bg-secondary/90">
-                            Забронировать
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
+
 
             <section className="bg-white rounded-2xl p-8 md:p-12">
               <h3 className="text-3xl font-bold mb-8 text-center">Почему выбирают Belavia?</h3>
@@ -321,8 +278,9 @@ const Index = () => {
             </div>
 
             <Tabs defaultValue="flights" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="flights">Рейсы</TabsTrigger>
+                <TabsTrigger value="tickets">Купленные билеты</TabsTrigger>
                 <TabsTrigger value="stats">Статистика</TabsTrigger>
                 <TabsTrigger value="create">Создать рейс</TabsTrigger>
               </TabsList>
@@ -359,6 +317,59 @@ const Index = () => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="tickets" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Купленные билеты на рейсы</CardTitle>
+                    <CardDescription>Список всех проданных билетов</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        <div>
+                          <p className="font-semibold">Минск → Москва</p>
+                          <p className="text-sm text-muted-foreground">15 февраля 2026 в 10:30</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">Билет #BV-001234</p>
+                          <p className="text-xs text-muted-foreground">Пассажир: Иванов И.И.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        <div>
+                          <p className="font-semibold">Минск → Стамбул</p>
+                          <p className="text-sm text-muted-foreground">16 февраля 2026 в 14:00</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">Билет #BV-001235</p>
+                          <p className="text-xs text-muted-foreground">Пассажир: Петров П.П.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        <div>
+                          <p className="font-semibold">Минск → Дубай</p>
+                          <p className="text-sm text-muted-foreground">18 февраля 2026 в 08:15</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">Билет #BV-001236</p>
+                          <p className="text-xs text-muted-foreground">Пассажир: Сидоров С.С.</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        <div>
+                          <p className="font-semibold">Минск → Париж</p>
+                          <p className="text-sm text-muted-foreground">20 февраля 2026 в 16:45</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">Билет #BV-001237</p>
+                          <p className="text-xs text-muted-foreground">Пассажир: Козлов К.К.</p>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
