@@ -27,13 +27,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const { toast } = useToast();
 
-  const [flights] = useState<Flight[]>([
-    { id: '1', from: 'Минск', to: 'Москва', date: '2026-02-15', time: '10:30', price: 150, seats: 45, duration: '1ч 45м' },
-    { id: '2', from: 'Минск', to: 'Стамбул', date: '2026-02-16', time: '14:00', price: 280, seats: 32, duration: '3ч 20м' },
-    { id: '3', from: 'Минск', to: 'Дубай', date: '2026-02-18', time: '08:15', price: 450, seats: 18, duration: '5ч 30м' },
-    { id: '4', from: 'Минск', to: 'Париж', date: '2026-02-20', time: '16:45', price: 320, seats: 28, duration: '3ч 10м' },
-    { id: '5', from: 'Минск', to: 'Тель-Авив', date: '2026-02-22', time: '11:20', price: 380, seats: 12, duration: '4ч 15м' },
-  ]);
+  const [flights, setFlights] = useState<Flight[]>([]);
 
   const handleAdminLogin = () => {
     if (adminPassword === 'adminb') {
@@ -167,47 +161,59 @@ const Index = () => {
           <div className="space-y-6 animate-fade-in">
             <h2 className="text-3xl font-bold">Все доступные рейсы</h2>
             
-            <div className="grid gap-4">
-              {flights.map((flight) => (
-                <Card key={flight.id} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-2">
-                          <h3 className="text-2xl font-bold">{flight.from}</h3>
-                          <Icon name="ArrowRight" className="text-primary" size={24} />
-                          <h3 className="text-2xl font-bold">{flight.to}</h3>
-                          <Badge variant="secondary">{flight.duration}</Badge>
+            {flights.length === 0 ? (
+              <Card>
+                <CardContent className="p-12">
+                  <div className="text-center space-y-4">
+                    <Icon name="Plane" size={64} className="mx-auto text-muted-foreground opacity-50" />
+                    <h3 className="text-2xl font-semibold text-muted-foreground">Рейсы пока не созданы</h3>
+                    <p className="text-muted-foreground">Администратор ещё не добавил доступные рейсы</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4">
+                {flights.map((flight) => (
+                  <Card key={flight.id} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-4 mb-2">
+                            <h3 className="text-2xl font-bold">{flight.from}</h3>
+                            <Icon name="ArrowRight" className="text-primary" size={24} />
+                            <h3 className="text-2xl font-bold">{flight.to}</h3>
+                            <Badge variant="secondary">{flight.duration}</Badge>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Icon name="Calendar" size={14} />
+                              {new Date(flight.date).toLocaleDateString('ru-RU')}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icon name="Clock" size={14} />
+                              {flight.time}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Icon name="Users" size={14} />
+                              {flight.seats} мест
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Icon name="Calendar" size={14} />
-                            {new Date(flight.date).toLocaleDateString('ru-RU')}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Icon name="Clock" size={14} />
-                            {flight.time}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Icon name="Users" size={14} />
-                            {flight.seats} мест
-                          </span>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-3xl font-bold text-primary">${flight.price}</p>
+                            <p className="text-xs text-muted-foreground">за человека</p>
+                          </div>
+                          <Button size="lg" className="bg-secondary hover:bg-secondary/90">
+                            Забронировать
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-3xl font-bold text-primary">${flight.price}</p>
-                          <p className="text-xs text-muted-foreground">за человека</p>
-                        </div>
-                        <Button size="lg" className="bg-secondary hover:bg-secondary/90">
-                          Забронировать
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -292,32 +298,38 @@ const Index = () => {
                     <CardDescription>Редактирование существующих рейсов</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      {flights.map((flight) => (
-                        <div key={flight.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                          <div>
-                            <p className="font-semibold">{flight.from} → {flight.to}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(flight.date).toLocaleDateString('ru-RU')} в {flight.time}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <div className="text-right">
-                              <p className="font-bold">${flight.price}</p>
-                              <p className="text-xs text-muted-foreground">{flight.seats} мест</p>
+                    {flights.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        Рейсы не созданы. Создайте первый рейс во вкладке "Создать рейс"
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {flights.map((flight) => (
+                          <div key={flight.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                            <div>
+                              <p className="font-semibold">{flight.from} → {flight.to}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(flight.date).toLocaleDateString('ru-RU')} в {flight.time}
+                              </p>
                             </div>
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="outline">
-                                <Icon name="Edit" size={16} />
-                              </Button>
-                              <Button size="sm" variant="destructive">
-                                <Icon name="Trash2" size={16} />
-                              </Button>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="font-bold">${flight.price}</p>
+                                <p className="text-xs text-muted-foreground">{flight.seats} мест</p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline">
+                                  <Icon name="Edit" size={16} />
+                                </Button>
+                                <Button size="sm" variant="destructive">
+                                  <Icon name="Trash2" size={16} />
+                                </Button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -329,47 +341,8 @@ const Index = () => {
                     <CardDescription>Список всех проданных билетов</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">Минск → Москва</p>
-                          <p className="text-sm text-muted-foreground">15 февраля 2026 в 10:30</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">Билет #BV-001234</p>
-                          <p className="text-xs text-muted-foreground">Пассажир: Иванов И.И.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">Минск → Стамбул</p>
-                          <p className="text-sm text-muted-foreground">16 февраля 2026 в 14:00</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">Билет #BV-001235</p>
-                          <p className="text-xs text-muted-foreground">Пассажир: Петров П.П.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">Минск → Дубай</p>
-                          <p className="text-sm text-muted-foreground">18 февраля 2026 в 08:15</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">Билет #BV-001236</p>
-                          <p className="text-xs text-muted-foreground">Пассажир: Сидоров С.С.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-semibold">Минск → Париж</p>
-                          <p className="text-sm text-muted-foreground">20 февраля 2026 в 16:45</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">Билет #BV-001237</p>
-                          <p className="text-xs text-muted-foreground">Пассажир: Козлов К.К.</p>
-                        </div>
-                      </div>
+                    <div className="text-center py-8 text-muted-foreground">
+                      Пока нет купленных билетов
                     </div>
                   </CardContent>
                 </Card>
@@ -408,7 +381,7 @@ const Index = () => {
                     <CardContent>
                       <div className="flex items-center justify-between">
                         <p className="text-3xl font-bold">
-                          ${Math.round(flights.reduce((sum, f) => sum + f.price, 0) / flights.length)}
+                          ${flights.length > 0 ? Math.round(flights.reduce((sum, f) => sum + f.price, 0) / flights.length) : 0}
                         </p>
                         <Icon name="DollarSign" className="text-primary" size={32} />
                       </div>
@@ -421,19 +394,25 @@ const Index = () => {
                     <CardTitle>Популярные направления</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      {flights.slice(0, 5).map((flight, index) => (
-                        <div key={flight.id} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                              <span className="text-sm font-bold text-primary">{index + 1}</span>
+                    {flights.length === 0 ? (
+                      <div className="text-center py-4 text-muted-foreground">
+                        Нет данных для отображения
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {flights.slice(0, 5).map((flight, index) => (
+                          <div key={flight.id} className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                <span className="text-sm font-bold text-primary">{index + 1}</span>
+                              </div>
+                              <span className="font-medium">{flight.to}</span>
                             </div>
-                            <span className="font-medium">{flight.to}</span>
+                            <span className="text-muted-foreground">{flight.seats} мест</span>
                           </div>
-                          <span className="text-muted-foreground">{flight.seats} мест</span>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
